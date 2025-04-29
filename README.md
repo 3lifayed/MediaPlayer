@@ -23,10 +23,6 @@ This is a simple, functional Android music player application built using Java. 
 
 ## Screenshots
 
+![Screenshot_20250429_142712_Media Player](https://github.com/user-attachments/assets/d49b44ce-4959-4539-a1e4-295ceac9704b)
 
-
-## Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/android-music-player.git
+![Screenshot_20250429_142728_Media Player](https://github.com/user-attachments/assets/eec66415-fa8d-4abf-9270-ea1c0fafc075)
