@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
@@ -12,6 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Developer Info -->
+        <meta-data
+            android:name="com.example.developer"
+            android:value="Ali Fayed" />
+        <meta-data
+            android:name="com.example.copyright"
+            android:value="© 2025 Ali Fayed. All rights reserved." />
+
+        <!-- Launcher Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -21,6 +31,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Player Activity -->
         <activity android:name=".PlayerActivity" />
 
     </application>
