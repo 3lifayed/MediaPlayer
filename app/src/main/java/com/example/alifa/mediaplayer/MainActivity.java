@@ -2,13 +2,16 @@ package com.example.alifa.mediaplayer;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -17,94 +20,88 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView myListViewForSongs;
     String[] items;
+    ArrayList<Uri> mySongs = new ArrayList<>();
+    ArrayList<String> songNames = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myListViewForSongs = findViewById(R.id.mySongListView);
         runtimepermission();
-
     }
 
-    public void runtimepermission(){
+    public void runtimepermission() {
+        String permission = Build.VERSION.SDK_INT >= 33
+                ? Manifest.permission.READ_MEDIA_AUDIO
+                : Manifest.permission.READ_EXTERNAL_STORAGE;
+
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withPermission(permission)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
+                        Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
                         display();
-
                     }
 
                     @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
+                    public void onPermissionDenied(PermissionDeniedResponse response) {}
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
                         token.continuePermissionRequest();
                     }
                 }).check();
     }
 
-    public ArrayList<File> findSong (File file){
-        ArrayList<File> arrayList = new ArrayList<>();
-        File[] files = file.listFiles();
-        for (File singleFile: files){
+    public void getAllAudioFiles() {
+        Uri collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
-            if (singleFile.isDirectory() && !singleFile.isHidden()){
-                arrayList.addAll(findSong(singleFile));
-            }
-            else {
+        String[] projection = new String[]{
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DISPLAY_NAME
+        };
 
-                if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".m4a")){
-                    arrayList.add(singleFile);
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        try (Cursor cursor = getContentResolver().query(collection, projection, selection, null, null)) {
+            if (cursor != null) {
+                int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
+                int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
+
+                while (cursor.moveToNext()) {
+                    long id = cursor.getLong(idColumn);
+                    String name = cursor.getString(nameColumn);
+                    Uri contentUri = Uri.withAppendedPath(collection, String.valueOf(id));
+
+                    mySongs.add(contentUri);
+                    songNames.add(name.replace(".mp3", "").replace(".m4a", ""));
                 }
             }
         }
-        return arrayList;
     }
 
-    void display(){
-        final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
-        items = new String[mySongs.size()];
-        for (int i=0; i<mySongs.size(); i++){
-            items[i] = mySongs.get(i).getName().toString().replace(".mp3","").replace(".m4a","");
+    void display() {
+        getAllAudioFiles();
+        items = songNames.toArray(new String[0]);
 
-        }
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1,items);
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         myListViewForSongs.setAdapter(myAdapter);
 
-        myListViewForSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                String songName = myListViewForSongs.getItemAtPosition(i).toString();
-                startActivity(new Intent(getApplicationContext(),PlayerActivity.class)
-                .putExtra("songs",mySongs).putExtra("songname",songName)
-                .putExtra("pos",i));
-
-            }
+        myListViewForSongs.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+            intent.putExtra("uri", mySongs.get(i).toString());
+            intent.putExtra("songname", items[i]);
+            intent.putExtra("songs", mySongs);
+            intent.putExtra("pos", i);
+            startActivity(intent);
         });
-
-        /*myListViewForSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                String songName=myListViewForSongs.getItemIdAtPosition(i).toString();
-
-                startActivity(new Intent(getApplicationContext(),PlayerActivity.class)
-                .putExtra("songs",mySongs).putExtra("songname",songName));
-            }
-        });*/
     }
 }

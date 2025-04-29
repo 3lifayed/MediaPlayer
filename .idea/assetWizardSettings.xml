@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_skip_previous_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Downloads/android-studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/shuffle/baseline_shuffle_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="icon_previous" />
+                            <entry key="outputName" value="ic_shuffle_on" />
                             <entry key="sourceFile" value="C:\Users\alifa" />
                           </map>
                         </option>

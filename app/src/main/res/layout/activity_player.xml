@@ -3,91 +3,115 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:layout_height="match_parent"
     tools:context=".PlayerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
         android:layout_weight="7"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <ImageView
+            android:id="@+id/albumArtImage"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_gravity="center"
             android:layout_marginTop="60dp"
-            android:contentDescription="TODO"
-            android:src="@drawable/cover_art" />
+            android:src="@drawable/cover_art"
+            android:contentDescription="Album Art" />
 
         <TextView
             android:id="@+id/songLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
             android:text="Song Name"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="22sp" />
-
+            android:textSize="22sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        >
+        android:layout_weight="3">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            >
+            android:padding="5dp">
+
+            <!-- Elapsed and remaining time -->
+            <TextView
+                android:id="@+id/time_elapsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="110dp"
+                android:layout_marginStart="4dp"
+                android:text="0:00"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/time_remaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="110dp"
+                android:layout_marginEnd="4dp"
+                android:text="-0:00"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
             <SeekBar
+                android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/seekBar"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="40dp"
-                />
+                android:layout_marginBottom="90dp" />
+
             <Button
+                android:id="@+id/pause"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/icon_pause"
-                android:id="@+id/pause"
                 android:layout_marginTop="5dp"
-                />
+                android:background="@drawable/icon_pause" />
 
             <Button
+                android:id="@+id/next"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:id="@+id/next"
                 android:layout_toRightOf="@id/pause"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/icon_next"
-
-                />
+                android:background="@drawable/icon_next" />
 
             <Button
+                android:id="@+id/previous"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:id="@+id/previous"
                 android:layout_toLeftOf="@id/pause"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/icon_previous"
+                android:background="@drawable/icon_previous" />
 
-                />
-
-
+            <Button
+                android:id="@+id/shuffle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/pause"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:background="@drawable/ic_shuffle" />
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>
